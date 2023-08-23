@@ -1,0 +1,11 @@
+CREATE TABLE Answer (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    question TEXT UNIQUE NOT NULL,
+    answer TEXT NOT NULL
+);
+
+getAnswerByQuestion:
+SELECT answer FROM Answer WHERE question = :question;
+
+getAllAnswers:
+SELECT * FROM Answer;

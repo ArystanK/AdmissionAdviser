@@ -7,9 +7,15 @@ plugins {
 kotlin {
     androidTarget()
     sourceSets {
+        val koinVersion = "3.4.3"
+        val koinAndroidxComposeVersion = "3.4.6"
         val androidMain by getting {
             dependencies {
                 implementation(project(":shared"))
+                implementation("io.insert-koin:koin-android:$koinVersion")
+                implementation("io.insert-koin:koin-androidx-compose:$koinAndroidxComposeVersion")
+                implementation("io.insert-koin:koin-core:$koinVersion")
+                implementation("io.insert-koin:koin-logger-slf4j:$koinVersion")
             }
         }
     }
@@ -17,12 +23,12 @@ kotlin {
 
 android {
     compileSdk = (findProperty("android.compileSdk") as String).toInt()
-    namespace = "com.myapplication"
+    namespace = "kz.arctan"
 
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
 
     defaultConfig {
-        applicationId = "com.myapplication.MyApplication"
+        applicationId = "kz.arctan.admissionadviser"
         minSdk = (findProperty("android.minSdk") as String).toInt()
         targetSdk = (findProperty("android.targetSdk") as String).toInt()
         versionCode = 1

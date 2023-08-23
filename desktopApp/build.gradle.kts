@@ -8,10 +8,14 @@ plugins {
 kotlin {
     jvm()
     sourceSets {
+        val koinVersion = "3.4.3"
         val jvmMain by getting  {
             dependencies {
                 implementation(compose.desktop.currentOs)
                 implementation(project(":shared"))
+                implementation("io.insert-koin:koin-core:$koinVersion")
+                implementation("io.insert-koin:koin-compose:1.0.4")
+                implementation("io.insert-koin:koin-logger-slf4j:$koinVersion")
             }
         }
     }
