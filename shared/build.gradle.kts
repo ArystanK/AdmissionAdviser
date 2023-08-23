@@ -52,6 +52,7 @@ kotlin {
                 implementation("com.arkivanov.mvikotlin:mvikotlin-extensions-coroutines:$mviKotlinVersion")
                 implementation("io.insert-koin:koin-core:$koinVersion")
                 implementation("io.insert-koin:koin-logger-slf4j:$koinVersion")
+                implementation("com.russhwolf:multiplatform-settings:1.0.0")
             }
         }
         val androidMain by getting {

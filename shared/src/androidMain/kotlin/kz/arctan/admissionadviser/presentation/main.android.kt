@@ -6,8 +6,3 @@ import androidx.compose.ui.tooling.preview.Preview
 @Composable
 fun MainView(component: Component<MainState, MainIntent>) = App(component)
 
-@Preview
-@Composable
-fun PreviewMessage() {
-    MessageComposable("Hello!!")
-}

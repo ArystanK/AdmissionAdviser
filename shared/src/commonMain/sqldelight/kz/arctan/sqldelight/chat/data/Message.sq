@@ -6,3 +6,6 @@ CREATE TABLE Message(
 
 getAllMessages:
 SELECT * FROM Message;
+
+sentMessage:
+INSERT INTO Message(from_ai, text) VALUES (:from_ai, :text);

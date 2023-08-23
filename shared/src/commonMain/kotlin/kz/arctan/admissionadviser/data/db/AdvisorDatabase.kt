@@ -7,10 +7,8 @@ import kotlinx.coroutines.flow.Flow
 import kz.arctan.Database
 import kz.arctan.sqldelight.chat.data.Answer
 import kz.arctan.sqldelight.chat.data.Message
-import org.koin.java.KoinJavaComponent.inject
 
-class AdvisorDatabase {
-    private val database: Database by inject(Database::class.java)
+class AdvisorDatabase(private val database: Database) {
 
     suspend fun getAllAnswers(): Flow<List<Answer>> = coroutineScope {
         database.answerQueries.getAllAnswers().asFlow().mapToList(coroutineContext)
@@ -18,5 +16,9 @@ class AdvisorDatabase {
 
     suspend fun getAllMessages(): Flow<List<Message>> = coroutineScope {
         database.messageQueries.getAllMessages().asFlow().mapToList(coroutineContext)
+    }
+
+    suspend fun sentMessage(message: String, fromAi: Boolean) = coroutineScope {
+        database.messageQueries.sentMessage(fromAi.toLong(), message)
     }
 }
