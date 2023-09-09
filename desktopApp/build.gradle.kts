@@ -9,7 +9,7 @@ kotlin {
     jvm()
     sourceSets {
         val koinVersion = "3.4.3"
-        val jvmMain by getting  {
+        val jvmMain by getting {
             dependencies {
                 implementation(compose.desktop.currentOs)
                 implementation(project(":shared"))

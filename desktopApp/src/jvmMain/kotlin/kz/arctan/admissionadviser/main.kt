@@ -1,5 +1,7 @@
 package kz.arctan.admissionadviser
 
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import kz.arctan.admissionadviser.presentation.MainComponent
@@ -17,12 +19,12 @@ fun main() {
     }
     application {
         val component = koinInject<MainComponent>()
-
+        val state by component.state.collectAsState()
         Window(
             onCloseRequest = ::exitApplication,
-            title = Strings[Strings.ADMISSION_ADVISER, Strings.Language.RUSSIAN] ?: ""
+            title = Strings[Strings.ADMISSION_ADVISER, state.language] ?: ""
         ) {
-            MainView(component)
+            MainView(state, component::flatMap)
         }
     }
 }

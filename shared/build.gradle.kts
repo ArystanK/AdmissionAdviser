@@ -36,6 +36,7 @@ kotlin {
         val mviKotlinVersion = "3.2.1"
         val koinVersion = "3.4.3"
         val koinAndroidxComposeVersion = "3.4.6"
+        val ktorVersion = "2.3.4"
         val commonMain by getting {
             dependencies {
                 implementation(compose.runtime)
@@ -53,6 +54,10 @@ kotlin {
                 implementation("io.insert-koin:koin-core:$koinVersion")
                 implementation("io.insert-koin:koin-logger-slf4j:$koinVersion")
                 implementation("com.russhwolf:multiplatform-settings:1.0.0")
+                implementation("io.ktor:ktor-client-core:$ktorVersion")
+                implementation("io.ktor:ktor-client-cio:$ktorVersion")
+                implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
+                implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
             }
         }
         val androidMain by getting {

@@ -3,6 +3,8 @@ package kz.arctan.admissionadviser.presentation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 
+@Preview(showBackground = true)
 @Composable
-fun MainView(state: MainState, flatMap: (MainIntent) -> Unit) = App(state, flatMap)
-
+fun WelcomePreview() {
+    WelcomeView(MainState()) {}
+}
