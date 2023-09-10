@@ -8,13 +8,10 @@ import kz.arctan.admissionadviser.presentation.MainComponent
 import kz.arctan.admissionadviser.presentation.MainView
 import kz.arctan.admissionadviser.presentation.localization.Strings
 import org.koin.compose.koinInject
-import org.koin.core.context.GlobalContext.get
 import org.koin.core.context.startKoin
-import org.koin.logger.slf4jLogger
 
 fun main() {
     startKoin {
-        slf4jLogger()
         modules(appModule)
     }
     application {

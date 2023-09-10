@@ -15,8 +15,7 @@ kotlin {
                 implementation("io.insert-koin:koin-android:$koinVersion")
                 implementation("io.insert-koin:koin-androidx-compose:$koinAndroidxComposeVersion")
                 implementation("io.insert-koin:koin-core:$koinVersion")
-                implementation("io.insert-koin:koin-logger-slf4j:$koinVersion")
-                implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
+                implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
             }
         }
     }

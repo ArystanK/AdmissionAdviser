@@ -15,7 +15,6 @@ kotlin {
                 implementation(project(":shared"))
                 implementation("io.insert-koin:koin-core:$koinVersion")
                 implementation("io.insert-koin:koin-compose:1.0.4")
-                implementation("io.insert-koin:koin-logger-slf4j:$koinVersion")
             }
         }
     }
@@ -27,7 +26,7 @@ compose.desktop {
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "KotlinMultiplatformComposeDesktopApplication"
+            packageName = "Admission Adviser"
             packageVersion = "1.0.0"
         }
     }
