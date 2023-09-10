@@ -58,35 +58,25 @@ class MainComponent(
                     launch { database.sentMessage(_state.value.messages.last().text, false) }
                     val deferredAnswer = async {
                         try {
-//                            service.sendMessage(
-//                                SendMessageDto(
-//                                    Inputs(
-//                                        generated_responses = _state.value.messages.filter { it.from_ai == 1L }
-//                                            .map { it.text },
-//                                        past_user_inputs = _state.value.messages.filterIndexed { index, message -> message.from_ai == 0L && index != _state.value.messages.lastIndex }
-//                                            .map { it.text },
-//                                        text = _state.value.messages.last().text
-//                                    )
-//                                )
-//                            )
+                            service.sendMessage(_state.value.messages.last().text)
                         } catch (e: Exception) {
                             e.printStackTrace()
                             null
                         }
                     }
                     val answer = deferredAnswer.await()
-//                    answer?.let {
-//                        launch { database.sentMessage(it.generated_text, true) }
-//                    }
-//                    _state.update {
-//                        it.copy(
-//                            isLoading = false, messages = it.messages + Message(
-//                                id = it.messages.size.toLong(),
-//                                text = answer?.generated_text ?: "I don't know",
-//                                from_ai = 1L
-//                            )
-//                        )
-//                    }
+                    answer?.let {
+                        launch { database.sentMessage(it, true) }
+                    }
+                    _state.update {
+                        it.copy(
+                            isLoading = false, messages = it.messages + Message(
+                                id = it.messages.size.toLong(),
+                                text = answer ?: "I don't know",
+                                from_ai = 1L
+                            )
+                        )
+                    }
                 }
             }
 
