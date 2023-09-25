@@ -14,36 +14,38 @@ import kz.arctan.sqldelight.chat.data.Answer
 import kz.arctan.sqldelight.chat.data.Message
 import kotlin.jvm.JvmInline
 
+
 class MainComponent(
-    private val database: AdvisorDatabase, private val service: MessageService
+    private val database: AdvisorDatabase,
+    private val service: MessageService,
 ) : Component<MainState, MainIntent> {
-    private val _state = MutableStateFlow(MainState())
-    override val state = _state.asStateFlow()
+    override val mutableState = MutableStateFlow(MainState())
+    override val state = mutableState.asStateFlow()
 
     init {
-        _state.update { it.copy(isLoading = true) }
+        mutableState.update { it.copy(isLoading = true) }
         CoroutineScope(Dispatchers.IO).launch {
             launch {
                 database.getAllAnswers().collect { answers ->
-                    _state.update { it.copy(answers = answers) }
+                    mutableState.update { it.copy(answers = answers) }
                 }
             }
             launch {
                 database.getAllMessages().collect { messages ->
-                    _state.update { it.copy(messages = messages) }
+                    mutableState.update { it.copy(messages = messages) }
                 }
             }
         }.invokeOnCompletion {
-            _state.update { it.copy(isLoading = false) }
+            mutableState.update { it.copy(isLoading = false) }
         }
     }
 
     override fun flatMap(intent: MainIntent) {
         when (intent) {
-            is MainIntent.TextChangeMainIntent -> _state.update { it.copy(message = intent.text) }
+            is MainIntent.TextChangeMainIntent -> mutableState.update { it.copy(message = intent.text) }
             MainIntent.MessageSent -> {
-                if (_state.value.message.isBlank()) return
-                _state.update { innerState ->
+                if (mutableState.value.message.isBlank()) return
+                mutableState.update { innerState ->
                     innerState.copy(
                         messages = innerState.messages + Message(
                             id = innerState.messages.size.toLong(),
@@ -55,22 +57,21 @@ class MainComponent(
                     )
                 }
                 CoroutineScope(Dispatchers.Default).launch {
-                    launch { database.sentMessage(_state.value.messages.last().text, false) }
+                    launch { database.sentMessage(mutableState.value.messages.last().text, false) }
                     val deferredAnswer = async {
                         try {
-                            service.sendMessage(_state.value.messages.last().text)
+                            service.sendMessage(mutableState.value.messages.last().text)
                         } catch (e: Exception) {
                             e.printStackTrace()
                             null
                         }
                     }
                     val answer = deferredAnswer.await()
-                    answer?.let {
-                        launch { database.sentMessage(it, true) }
-                    }
-                    _state.update {
+                    answer?.let { launch { database.sentMessage(it, true) } }
+                    mutableState.update {
                         it.copy(
-                            isLoading = false, messages = it.messages + Message(
+                            isLoading = false,
+                            messages = it.messages + Message(
                                 id = it.messages.size.toLong(),
                                 text = answer ?: "I don't know",
                                 from_ai = 1L
@@ -80,8 +81,9 @@ class MainComponent(
                 }
             }
 
-            is MainIntent.LanguageChangeMainIntent -> _state.update { it.copy(language = intent.language) }
-            is MainIntent.OpenPageIdChangeMainIntent -> _state.update { it.copy(openPageId = intent.openPageId) }
+            is MainIntent.LanguageChangeMainIntent -> mutableState.update { it.copy(language = intent.language) }
+            is MainIntent.OpenPageIdChangeMainIntent -> mutableState.update { it.copy(openPageId = intent.openPageId) }
+            else -> {}
         }
     }
 
@@ -113,7 +115,8 @@ data class MainState(
     val openPageId: Int = 0,
     val language: Strings.Language = Strings.Language.ENGLISH,
     val answers: List<Answer> = emptyList(),
-    val isLoading: Boolean = false
+    val isLoading: Boolean = false,
+    val isSpeechListened: Boolean = false
 )
 
 sealed interface MainIntent {
@@ -126,4 +129,10 @@ sealed interface MainIntent {
 
     @JvmInline
     value class OpenPageIdChangeMainIntent(val openPageId: Int) : MainIntent
+
+    data object StartSpeechListening : MainIntent
+
+    data object EndSpeechListening : MainIntent
+
+    data object CancelSpeechListening : MainIntent
 }

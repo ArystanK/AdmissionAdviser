@@ -64,22 +64,18 @@ fun BottomBarWithChat(
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun RoundedTextFieldWithSendButton(
-    value: String,
-    onValueChange: (String) -> Unit,
-    onSendClick: () -> Unit,
-    language: Strings.Language,
-    modifier: Modifier = Modifier,
-    buttonModifier: Modifier = Modifier,
+    state: MainState,
+    flatMap: (MainIntent) -> Unit
 ) {
-    Box(contentAlignment = Alignment.Center, modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp)) {
+    Box(contentAlignment = Alignment.Center, modifier = Modifier.padding(horizontal = 20.dp, vertical = 4.dp)) {
         Row(
-            modifier = modifier.background(Color.LightGray, shape = CircleShape).padding(horizontal = 8.dp),
+            modifier = Modifier.background(Color.LightGray, shape = CircleShape).padding(horizontal = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
             BasicTextField(
-                value = value,
-                onValueChange = onValueChange,
+                value = state.message,
+                onValueChange = { flatMap(MainIntent.TextChangeMainIntent(it)) },
                 textStyle = TextStyle(fontSize = 16.sp, textAlign = TextAlign.Start),
                 keyboardOptions = KeyboardOptions.Default.copy(
                     imeAction = ImeAction.Send,
@@ -88,36 +84,35 @@ fun RoundedTextFieldWithSendButton(
                 ),
                 modifier = Modifier
                     .weight(1f)
-                    .height(40.dp)
                     .padding(10.dp)
                     .onKeyEvent {
                         if (it.key == Key.Enter && it.isShiftPressed) {
-                            onSendClick()
+                            flatMap(MainIntent.MessageSent)
                             true
                         } else false
                     }
             )
 
             Spacer(modifier = Modifier.width(8.dp))
-            IconButton(onClick = onSendClick) {
-                Icon(
-                    imageVector = Icons.Default.Send,
-                    contentDescription = Strings[Strings.SEND_MESSAGE, language],
-                    tint = Color.Gray,
-                    modifier = buttonModifier
-                        .size(36.dp)
-                )
-            }
+            if (state.message.isBlank())
+                SpeechInput(state, flatMap)
+            else
+                IconButton(onClick = { flatMap(MainIntent.MessageSent) }) {
+                    Icon(
+                        imageVector = Icons.Default.Send,
+                        contentDescription = Strings[Strings.SEND_MESSAGE, state.language],
+                        tint = Color.Gray,
+                        modifier = Modifier.size(36.dp)
+                    )
+                }
         }
         Box(contentAlignment = Alignment.CenterStart) {
-            // Display the placeholder text if the value is empty
-            if (value.isBlank()) {
+            if (state.message.isBlank()) {
                 Text(
-                    text = Strings[Strings.TYPE_YOUR_MESSAGE_HERE_KEY, language] ?: "",
+                    text = Strings[Strings.TYPE_YOUR_MESSAGE_HERE_KEY, state.language],
                     color = Color.Gray,
                     fontSize = 16.sp,
-                    modifier = Modifier
-                        .padding(start = 24.dp)
+                    modifier = Modifier.padding(start = 24.dp)
                 )
             }
         }

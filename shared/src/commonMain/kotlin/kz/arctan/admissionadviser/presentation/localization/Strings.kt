@@ -10,6 +10,7 @@ object Strings {
     const val KAZAKH = "kazakh"
     const val ENGLISH = "english"
     const val WELCOME_TEXT = "welcome_text"
+    const val WELCOME_TEXT_DESKTOP = "welcome_text_desktop"
 
     enum class Language { KAZAKH, RUSSIAN, ENGLISH }
 
@@ -58,8 +59,13 @@ object Strings {
             Language.RUSSIAN to "Новый ИИ, который ответит на ваши вопросы.",
             Language.ENGLISH to "New AI that will answer your questions.",
             Language.KAZAKH to "Сұрақтарыңызға жауап беретін жаңа ЖИ."
+        ),
+        WELCOME_TEXT_DESKTOP to mapOf(
+            Language.RUSSIAN to "Получайте первым всю информацию о поступлении,грантах,скидках,конкурсах и обучении в университете!",
+            Language.ENGLISH to "Be the first to receive all the information about admission, grants, discounts, competitions and studying at the university!",
+            Language.KAZAKH to "Қабылдау, гранттар, жеңілдіктер, конкурстар және университетте оқу туралы барлық ақпаратты бірінші болып алыңыз!"
         )
     )
 
-    operator fun get(key: String, language: Language): String? = map[key]?.get(language)
+    operator fun get(key: String, language: Language): String = map[key]?.get(language) ?: ""
 }
